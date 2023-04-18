@@ -2,6 +2,8 @@ import express, { Application } from 'express';
 import cors from 'cors';
 
 import dbConnection from '../database/connection';
+import categoryRoutes from '../routes/categoryRouter';
+import productRoutes from '../routes/productRouter';
 import userRoutes from '../routes/userRouter';
 
 class Server {
@@ -28,6 +30,8 @@ class Server {
     }
 
     routes() {
+        this.app.use('/api/categories', categoryRoutes);
+        this.app.use('/api/products', productRoutes);
         this.app.use('/api/users', userRoutes);
     }
 
