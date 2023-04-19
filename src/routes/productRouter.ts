@@ -3,6 +3,7 @@ import { check } from 'express-validator';
 
 import { productDelete, productGet, productPost, productPut, productsGet } from "../controllers/productController";
 import { validate } from "../middlewares/validateFields";
+import { productExistsById } from "../helpers/dbValidators";
 
 const router = Router();
 
@@ -13,15 +14,20 @@ router.get('/:id', [
     validate
 ], productGet);
 
-router.post('/', productPost);
+router.post('/category/:id', [
+    check('id', 'No es un Id valido').isMongoId(),
+    validate
+], productPost);
 
 router.put('/:id', [
     check('id', 'No es un Id valido').isMongoId(),
+    check('id').custom(productExistsById),
     validate
 ], productPut);
 
 router.delete('/:id', [
     check('id', 'No es un Id valido').isMongoId(),
+    check('id').custom(productExistsById),
     validate
 ], productDelete);
 

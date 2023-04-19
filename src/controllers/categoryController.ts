@@ -1,10 +1,15 @@
-import { ErrorRequestHandler, Request, Response } from "express";
+import { Request, Response } from "express";
 
 import Category from '../models/category';
 
 export const categoryGet = async (req: Request, res: Response) => {
     try {
         const category = await Category.findById(req.params.id);
+        if (!category) {
+            req.log.warn(`La categoria con el id ${req.params.id} no existe en la BD`);
+            return res.status(404).json({ msg: 'No existe la categoria con el id: ' + req.params.id });
+        }
+        
         res.json(category);
         req.log.info('Obtuvo la categoria con el id: ' + req.params.id);
         
@@ -18,6 +23,7 @@ export const categoriesGet = async (req: Request, res: Response) => {
     try {
         const categories = await Category.find();
         res.json(categories);
+        req.log.info('Obtuvo todas las categorias');
         
     } catch (error: any) {
         res.status(500).json({ msg: error.message });
@@ -43,6 +49,7 @@ export const categoryPut = async (req: Request, res: Response) => {
         const { name } = req.body;
         const category = await Category.findByIdAndUpdate(req.params.id, { name }, { new: true });
         res.json(category);
+        req.log.info('Actualizo la categoria con el id: ' + req.params.id);
         
     } catch (error: any) {
         res.status(500).json({ msg: error.message });

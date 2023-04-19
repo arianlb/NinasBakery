@@ -11,7 +11,6 @@ router.get('/', categoriesGet);
 
 router.get('/:id', [
     check('id', 'No es un Id valido').isMongoId(),
-    check('id').custom(categoryExistsById),
     validate
 ], categoryGet);
 
