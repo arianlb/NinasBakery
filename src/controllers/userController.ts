@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 
-export const usersGet = (req: Request, res: Response) => {
-    res.json({
-        msg: 'usersGet'
-    });
+import User from '../models/user';
+
+export const usersGet = async (req: Request, res: Response) => {
+    const users = await User.find();
+    res.json(users);
 }
 
 export const userGet = (req: Request, res: Response) => {

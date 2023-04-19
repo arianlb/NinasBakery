@@ -1,41 +1,63 @@
-import { Request, Response } from "express";
+import { ErrorRequestHandler, Request, Response } from "express";
 
-export const categoryGet = (req: Request, res: Response) => {
-    const { id } = req.params;
-    res.json({
-        msg: 'categoryGet',
-        id
-    });
+import Category from '../models/category';
+
+export const categoryGet = async (req: Request, res: Response) => {
+    try {
+        const category = await Category.findById(req.params.id);
+        res.json(category);
+        req.log.info('Obtuvo la categoria con el id: ' + req.params.id);
+        
+    } catch (error: any) {
+        res.status(500).json({ msg: error.message });
+        req.log.error(error.messge);
+    }
 }
 
-export const categoriesGet = (req: Request, res: Response) => {
-    res.json({
-        msg: 'categoriesGet'
-    });
+export const categoriesGet = async (req: Request, res: Response) => {
+    try {
+        const categories = await Category.find();
+        res.json(categories);
+        
+    } catch (error: any) {
+        res.status(500).json({ msg: error.message });
+        req.log.error(error.messge);
+    }
 }
 
-export const categoryPost = (req: Request, res: Response) => {
-    const { body } = req;
-    res.json({
-        msg: 'categoryPost',
-        body
-    });
+export const categoryPost = async (req: Request, res: Response) => {
+    try {
+        const category = new Category({ name: req.body.name });
+        await category.save();
+        res.json(category);
+        req.log.info('Creo la categoria: ' + category.name);
+        
+    } catch (error: any) {
+        res.status(500).json({ msg: error.message });
+        req.log.error(error.messge);
+    }
 }
 
-export const categoryPut = (req: Request, res: Response) => {
-    const { id } = req.params;
-    const { body } = req;
-    res.json({
-        msg: 'categoryPut',
-        id,
-        body
-    });
+export const categoryPut = async (req: Request, res: Response) => {
+    try {
+        const { name } = req.body;
+        const category = await Category.findByIdAndUpdate(req.params.id, { name }, { new: true });
+        res.json(category);
+        
+    } catch (error: any) {
+        res.status(500).json({ msg: error.message });
+        req.log.error(error.messge);
+    }
 }
 
-export const categoryDelete = (req: Request, res: Response) => {
-    const { id } = req.params;
-    res.json({
-        msg: 'categoryDelete',
-        id
-    });
+export const categoryDelete = async (req: Request, res: Response) => {
+    try {
+        await Category.findByIdAndDelete(req.params.id);
+        res.json({ id: req.params.id });
+        req.log.info('Elimino la categoria con el id: ' + req.params.id);
+
+    } catch (error: any) {
+        res.status(500).json({ msg: error.message });
+        req.log.error(error.messge);
+    }
 }

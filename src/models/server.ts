@@ -1,5 +1,6 @@
 import express, { Application } from 'express';
 import cors from 'cors';
+import pino from 'pino-http';
 
 import dbConnection from '../database/connection';
 import categoryRoutes from '../routes/categoryRouter';
@@ -27,6 +28,15 @@ class Server {
         this.app.use(cors());
         this.app.use(express.json());
         this.app.use(express.static('public'));
+        this.app.use(pino({
+            transport: {
+                target: 'pino-pretty',
+                options: {
+                    translateTime: "SYS:standard",
+                    ignore: "req.id,req.query,req.params,req.headers,req.remoteAddress,req.remotePort,res,err"
+                }
+            }
+        }));
     }
 
     routes() {
