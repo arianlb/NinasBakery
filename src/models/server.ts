@@ -6,6 +6,7 @@ import dbConnection from '../database/connection';
 import categoryRoutes from '../routes/categoryRouter';
 import productRoutes from '../routes/productRouter';
 import userRoutes from '../routes/userRouter';
+import loginRoutes from '../routes/loginRouter';
 
 class Server {
     private app: Application;
@@ -43,6 +44,7 @@ class Server {
         this.app.use('/api/categories', categoryRoutes);
         this.app.use('/api/products', productRoutes);
         this.app.use('/api/users', userRoutes);
+        this.app.use('/api/login', loginRoutes);
     }
 
     listen() {
