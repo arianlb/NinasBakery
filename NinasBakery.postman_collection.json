@@ -256,6 +256,38 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Subir una imagen de Producto",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/AriaN/Pictures/perfil2.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/products/643f8d447f90b4816aa9a1d8/picture",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"products",
+								"643f8d447f90b4816aa9a1d8",
+								"picture"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -378,6 +410,38 @@
 								"api",
 								"categories",
 								"643f8c207f90b4816aa9a1d0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Subir una imagen de Categoria",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/AriaN/Pictures/DeterminarPositivos.txt"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/categories/643f8d447f90b4816aa9a1d8/picture",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"categories",
+								"643f8d447f90b4816aa9a1d8",
+								"picture"
 							]
 						}
 					},
