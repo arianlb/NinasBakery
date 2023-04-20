@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { check } from 'express-validator';
 
-import { productDelete, productGet, productPost, productPut, productsGet } from "../controllers/productController";
+import { productDelete, productGet, productPost, productPut, productsGet, updatePicture } from "../controllers/productController";
 import { validate } from "../middlewares/validateFields";
 import { productExistsById } from "../helpers/dbValidators";
 
@@ -30,5 +30,10 @@ router.delete('/:id', [
     check('id').custom(productExistsById),
     validate
 ], productDelete);
+
+router.put('/:id/picture', [
+    check('id', 'No es un Id valido').isMongoId(),
+    validate
+], updatePicture);
 
 export default router;

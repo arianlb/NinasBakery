@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 
 import Category from '../models/category';
 import Product from '../models/product';
+import { deleteFile, upload } from "../helpers/uploadPicture";
 
 export const productGet = async (req: Request, res: Response) => {
     try {
@@ -71,6 +72,34 @@ export const productDelete = async (req: Request, res: Response) => {
         await Product.findByIdAndDelete(req.params.id);
         res.json({ msg: 'Producto eliminado' });
         req.log.info('Elimino el producto con el id: ' + req.params.id);
+
+    } catch (error: any) {
+        res.status(500).json({ msg: error.message });
+        req.log.error(error.messge);
+    }
+}
+
+export const updatePicture = async (req: Request, res: Response) => {
+    try {
+        if (!req.files || Object.keys(req.files).length === 0 || !req.files.file) {
+            req.log.warn('No hay archivo para subir');
+            return res.status(400).json({ msg: 'No hay archivo para subir' });
+        }
+
+        const product = await Product.findById(req.params.id);
+        if (!product) {
+            req.log.warn(`El producto con el id ${req.params.id} no existe en la BD`);
+            return res.status(404).json({ msg: 'No existe el producto con el id: ' + req.params.id });
+        }
+
+        if (product.picture && product.picture.length > 1) {
+            deleteFile(product.picture);
+        }
+
+        product.picture = await upload(req.files.file) || '';
+        await product.save();
+        res.json(product);
+        req.log.info('Actualizo la imagen del producto: ' + product._id);
 
     } catch (error: any) {
         res.status(500).json({ msg: error.message });
