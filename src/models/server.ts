@@ -1,5 +1,6 @@
 import express, { Application } from 'express';
 import cors from 'cors';
+import fileUpload from 'express-fileupload';
 import pino from 'pino-http';
 
 import dbConnection from '../database/connection';
@@ -29,6 +30,12 @@ class Server {
         this.app.use(cors());
         this.app.use(express.json());
         this.app.use(express.static('public'));
+        this.app.use(fileUpload({
+            useTempFiles: true,
+            tempFileDir: '/tmp/',
+            limits: { fileSize: 25 * 1024 * 1024 },
+            abortOnLimit: true
+        }));
         this.app.use(pino({
             transport: {
                 target: 'pino-pretty',
