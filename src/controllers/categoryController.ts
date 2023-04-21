@@ -32,6 +32,18 @@ export const categoriesGet = async (req: Request, res: Response) => {
     }
 }
 
+export const categoryNamesGet = async (req: Request, res: Response) => {
+    try {
+        const categories = await Category.find({}, '_id name');
+        res.json(categories);
+        req.log.info('Obtuvo los nombres de las categorias');
+        
+    } catch (error: any) {
+        res.status(500).json({ msg: error.message });
+        req.log.error(error.messge);
+    }
+}
+
 export const categoryPost = async (req: Request, res: Response) => {
     try {
         const category = new Category({ name: req.body.name });
