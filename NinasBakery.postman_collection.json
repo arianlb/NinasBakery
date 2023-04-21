@@ -446,6 +446,27 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Obtener los nombres de las categorias",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/categories/names",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"categories",
+								"names"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
