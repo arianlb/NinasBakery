@@ -3,9 +3,13 @@ import Product from '../models/product';
 import User from '../models/user';
 
 export const categoryExistsById = async (id: string) => { 
-    const category = await Category.findById(id);
+    const category = await Category.findById(id).populate('products');
     if (!category) {
         throw new Error(`La categoria con el id ${id} no existe en la BD`);
+    }
+
+    if (category.products.length > 0) {
+        throw new Error(`La categoria con el id ${id} tiene productos asociados`);
     }
 }
 

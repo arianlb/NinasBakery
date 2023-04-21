@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 
 import Category from '../models/category';
+import Product from '../models/product';
 import { deleteFile, upload } from "../helpers/uploadPicture";
 
 export const categoryGet = async (req: Request, res: Response) => {
@@ -60,6 +61,16 @@ export const categoryPost = async (req: Request, res: Response) => {
 export const categoryPut = async (req: Request, res: Response) => {
     try {
         const { name } = req.body;
+        const categoryDB = await Category.findById(req.params.id).populate('products');
+        if (!categoryDB) {
+            req.log.warn(`La categoria con el id ${req.params.id} no existe en la BD`);
+            return res.status(404).json({ msg: 'No existe la categoria con el id: ' + req.params.id });
+        }
+        
+        const products = categoryDB?.products;
+        if (products) {
+            await Product.updateMany({ _id: { $in: products } }, { category: name });
+        }
         const category = await Category.findByIdAndUpdate(req.params.id, { name }, { new: true });
         res.json(category);
         req.log.info('Actualizo la categoria con el id: ' + req.params.id);
@@ -84,11 +95,6 @@ export const categoryDelete = async (req: Request, res: Response) => {
 
 export const updatePicture = async (req: Request, res: Response) => {
     try {
-        if (!req.files || Object.keys(req.files).length === 0 || !req.files.file) {
-            req.log.warn('No hay archivo para subir');
-            return res.status(400).json({ msg: 'No hay archivo para subir' });
-        }
-
         const category = await Category.findById(req.params.id);
         if (!category) {
             req.log.warn(`La categoria con el id ${req.params.id} no existe en la BD`);
@@ -99,7 +105,7 @@ export const updatePicture = async (req: Request, res: Response) => {
             deleteFile(category.picture);
         }
 
-        category.picture = await upload(req.files.file) || '';
+        category.picture = await upload(req.files!.file) || '';
         await category.save();
         res.json(category);
         req.log.info('Actualizo la imagen de la categoria: ' + category._id);

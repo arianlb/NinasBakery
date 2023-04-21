@@ -4,7 +4,7 @@ import { check } from 'express-validator';
 import { categoriesGet, categoryDelete, categoryGet, categoryNamesGet, categoryPost, categoryPut, updatePicture } from "../controllers/categoryController";
 import { validate } from "../middlewares/validateFields";
 import { categoryExistsById } from "../helpers/dbValidators";
-//import { validateUpload } from "../middlewares/validateFile";
+import { validateUpload } from "../middlewares/validateFile";
 
 const router = Router();
 
@@ -24,7 +24,7 @@ router.post('/', [
 
 router.put('/:id', [
     check('id', 'No es un Id valido').isMongoId(),
-    check('id').custom(categoryExistsById),
+    check('name', 'El nombre es obligatorio').notEmpty(),
     validate
 ], categoryPut);
 
@@ -35,6 +35,7 @@ router.delete('/:id', [
 ], categoryDelete);
 
 router.put('/:id/picture', [
+    validateUpload,
     check('id', 'No es un Id valido').isMongoId(),
     validate
 ], updatePicture);
