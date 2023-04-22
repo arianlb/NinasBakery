@@ -32,6 +32,22 @@ export const productsGet = async (req: Request, res: Response) => {
     }
 }
 
+export const productsByCategory = async (req: Request, res: Response) => {
+    try {
+        const category = await Category.findById(req.params.id).populate('products');
+        if (!category) {
+            req.log.warn(`La categoria con el id ${req.params.id} no existe en la BD`);
+            return res.status(404).json({ msg: 'No existe la categoria con el id: ' + req.params.id });
+        }
+        res.json(category.products);
+        req.log.info('Obtuvo los productos de la categoria con el id: ' + req.params.id);
+
+    } catch (error: any) {
+        res.status(500).json({ msg: error.message });
+        req.log.error(error.messge);
+    }
+}
+
 export const productPost = async (req: Request, res: Response) => {
     try {
         const category = await Category.findById(req.params.id);
@@ -73,6 +89,10 @@ export const productDelete = async (req: Request, res: Response) => {
         if (!product) {
             req.log.warn(`El producto con el id ${req.params.id} no existe en la BD`);
             return res.status(404).json({ msg: 'No existe el producto con el id: ' + req.params.id });
+        }
+
+        if (product.picture && product.picture.length > 1) {
+            deleteFile(product.picture);
         }
         
         const category = await Category.findOne({ name: product.category });

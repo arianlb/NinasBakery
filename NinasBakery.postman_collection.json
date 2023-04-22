@@ -288,6 +288,28 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Obtener producto por categoria",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/products/category/643f8d447f90b4816aa9a1d8",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"products",
+								"category",
+								"643f8d447f90b4816aa9a1d8"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

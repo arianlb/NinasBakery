@@ -83,8 +83,17 @@ export const categoryPut = async (req: Request, res: Response) => {
 
 export const categoryDelete = async (req: Request, res: Response) => {
     try {
+        const category = await Category.findById(req.params.id);
+        if (!category) {
+            req.log.warn(`La categoria con el id ${req.params.id} no existe en la BD`);
+            return res.status(404).json({ msg: 'No existe la categoria con el id: ' + req.params.id });
+        }
+        if (category.picture && category.picture.length > 1) {
+            deleteFile(category.picture);
+        }
+        
         await Category.findByIdAndDelete(req.params.id);
-        res.json({ id: req.params.id });
+        res.json({ msg: 'Categoria Eliminada' });
         req.log.info('Elimino la categoria con el id: ' + req.params.id);
 
     } catch (error: any) {

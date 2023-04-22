@@ -1,9 +1,4 @@
 import { v2 as cloudinary } from 'cloudinary';
-cloudinary.config({
-    cloud_name: "dqjs90sqs",
-    api_key: "515452877685295",
-    api_secret: "r2yvQMgiQ1TZMJw3x-rXWU4nzoA"
-});
 
 export const upload = async (file: any) => {
     try {
