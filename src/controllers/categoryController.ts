@@ -8,16 +8,16 @@ export const categoryGet = async (req: Request, res: Response) => {
     try {
         const category = await Category.findById(req.params.id);
         if (!category) {
-            req.log.warn(`La categoria con el id ${req.params.id} no existe en la BD`);
+            //req.log.warn(`La categoria con el id ${req.params.id} no existe en la BD`);
             return res.status(404).json({ msg: 'No existe la categoria con el id: ' + req.params.id });
         }
         
         res.json(category);
-        req.log.info('Obtuvo la categoria con el id: ' + req.params.id);
+        //req.log.info('Obtuvo la categoria con el id: ' + req.params.id);
         
     } catch (error: any) {
         res.status(500).json({ msg: error.message });
-        req.log.error(error.messge);
+        //req.log.error(error.messge);
     }
 }
 
@@ -25,11 +25,11 @@ export const categoriesGet = async (req: Request, res: Response) => {
     try {
         const categories = await Category.find();
         res.json(categories);
-        req.log.info('Obtuvo todas las categorias');
+        //req.log.info('Obtuvo todas las categorias');
         
     } catch (error: any) {
         res.status(500).json({ msg: error.message });
-        req.log.error(error.messge);
+        //req.log.error(error.messge);
     }
 }
 
@@ -37,11 +37,11 @@ export const categoryNamesGet = async (req: Request, res: Response) => {
     try {
         const categories = await Category.find({}, '_id name');
         res.json(categories);
-        req.log.info('Obtuvo los nombres de las categorias');
+        //req.log.info('Obtuvo los nombres de las categorias');
         
     } catch (error: any) {
         res.status(500).json({ msg: error.message });
-        req.log.error(error.messge);
+        //req.log.error(error.messge);
     }
 }
 
@@ -50,11 +50,11 @@ export const categoryPost = async (req: Request, res: Response) => {
         const category = new Category({ name: req.body.name });
         await category.save();
         res.json(category);
-        req.log.info('Creo la categoria: ' + category._id);
+        //req.log.info('Creo la categoria: ' + category._id);
         
     } catch (error: any) {
         res.status(500).json({ error });
-        req.log.error(error.messge);
+        //req.log.error(error.messge);
     }
 }
 
@@ -63,7 +63,7 @@ export const categoryPut = async (req: Request, res: Response) => {
         const { name } = req.body;
         const categoryDB = await Category.findById(req.params.id).populate('products');
         if (!categoryDB) {
-            req.log.warn(`La categoria con el id ${req.params.id} no existe en la BD`);
+            //req.log.warn(`La categoria con el id ${req.params.id} no existe en la BD`);
             return res.status(404).json({ msg: 'No existe la categoria con el id: ' + req.params.id });
         }
         
@@ -73,11 +73,11 @@ export const categoryPut = async (req: Request, res: Response) => {
         }
         const category = await Category.findByIdAndUpdate(req.params.id, { name }, { new: true });
         res.json(category);
-        req.log.info('Actualizo la categoria con el id: ' + req.params.id);
+        //req.log.info('Actualizo la categoria con el id: ' + req.params.id);
         
     } catch (error: any) {
         res.status(500).json({ msg: error.message });
-        req.log.error(error.messge);
+        //req.log.error(error.messge);
     }
 }
 
@@ -85,7 +85,7 @@ export const categoryDelete = async (req: Request, res: Response) => {
     try {
         const category = await Category.findById(req.params.id);
         if (!category) {
-            req.log.warn(`La categoria con el id ${req.params.id} no existe en la BD`);
+            //req.log.warn(`La categoria con el id ${req.params.id} no existe en la BD`);
             return res.status(404).json({ msg: 'No existe la categoria con el id: ' + req.params.id });
         }
         if (category.picture && category.picture.length > 1) {
@@ -94,11 +94,11 @@ export const categoryDelete = async (req: Request, res: Response) => {
         
         await Category.findByIdAndDelete(req.params.id);
         res.json({ msg: 'Categoria Eliminada' });
-        req.log.info('Elimino la categoria con el id: ' + req.params.id);
+        //req.log.info('Elimino la categoria con el id: ' + req.params.id);
 
     } catch (error: any) {
         res.status(500).json({ msg: error.message });
-        req.log.error(error.messge);
+        //req.log.error(error.messge);
     }
 }
 
@@ -106,7 +106,7 @@ export const updatePicture = async (req: Request, res: Response) => {
     try {
         const category = await Category.findById(req.params.id);
         if (!category) {
-            req.log.warn(`La categoria con el id ${req.params.id} no existe en la BD`);
+            //req.log.warn(`La categoria con el id ${req.params.id} no existe en la BD`);
             return res.status(404).json({ msg: 'No existe la categoria con el id: ' + req.params.id });
         }
 
@@ -117,10 +117,10 @@ export const updatePicture = async (req: Request, res: Response) => {
         category.picture = await upload(req.files!.file) || '';
         await category.save();
         res.json(category);
-        req.log.info('Actualizo la imagen de la categoria: ' + category._id);
+        //req.log.info('Actualizo la imagen de la categoria: ' + category._id);
 
     } catch (error: any) {
         res.status(500).json({ msg: error.message });
-        req.log.error(error.messge);
+        //req.log.error(error.messge);
     }
 }

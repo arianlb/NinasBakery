@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const express_fileupload_1 = __importDefault(require("express-fileupload"));
-const pino_http_1 = __importDefault(require("pino-http"));
+//import pino from 'pino-http';
 const connection_1 = __importDefault(require("../database/connection"));
 const categoryRouter_1 = __importDefault(require("../routes/categoryRouter"));
 const productRouter_1 = __importDefault(require("../routes/productRouter"));
@@ -44,7 +44,7 @@ class Server {
             limits: { fileSize: 25 * 1024 * 1024 },
             abortOnLimit: true
         }));
-        this.app.use((0, pino_http_1.default)({
+        /*this.app.use(pino({
             transport: {
                 target: 'pino-pretty',
                 options: {
@@ -52,7 +52,7 @@ class Server {
                     ignore: "req.id,req.query,req.params,req.headers,req.remoteAddress,req.remotePort,res,err"
                 }
             }
-        }));
+        }));*/
     }
     routes() {
         this.app.use('/api/categories', categoryRouter_1.default);

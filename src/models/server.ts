@@ -1,7 +1,7 @@
 import express, { Application } from 'express';
 import cors from 'cors';
 import fileUpload from 'express-fileupload';
-import pino from 'pino-http';
+//import pino from 'pino-http';
 
 import dbConnection from '../database/connection';
 import categoryRoutes from '../routes/categoryRouter';
@@ -36,7 +36,7 @@ class Server {
             limits: { fileSize: 25 * 1024 * 1024 },
             abortOnLimit: true
         }));
-        this.app.use(pino({
+        /*this.app.use(pino({
             transport: {
                 target: 'pino-pretty',
                 options: {
@@ -44,7 +44,7 @@ class Server {
                     ignore: "req.id,req.query,req.params,req.headers,req.remoteAddress,req.remotePort,res,err"
                 }
             }
-        }));
+        }));*/
     }
 
     routes() {
