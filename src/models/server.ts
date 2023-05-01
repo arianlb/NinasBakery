@@ -33,7 +33,7 @@ class Server {
         this.app.use(fileUpload({
             useTempFiles: true,
             tempFileDir: '/tmp/',
-            limits: { fileSize: 25 * 1024 * 1024 },
+            limits: { fileSize: 2 * 1024 * 1024 },
             abortOnLimit: true
         }));
         /*this.app.use(pino({
