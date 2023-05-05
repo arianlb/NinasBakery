@@ -85,7 +85,7 @@ export const productPut = async (req: Request, res: Response) => {
 
 export const productDelete = async (req: Request, res: Response) => {
     try {
-        const product = await Product.findById(req.params.id, '_id category');
+        const product = await Product.findById(req.params.id, '_id category picture');
         if (!product) {
             //req.log.warn(`El producto con el id ${req.params.id} no existe en la BD`);
             return res.status(404).json({ msg: 'No existe el producto con el id: ' + req.params.id });
@@ -103,12 +103,10 @@ export const productDelete = async (req: Request, res: Response) => {
                     break;
                 }
             }
+            category.save();
         }
         
-        await Promise.all([
-            category?.save(),
-            Product.findByIdAndDelete(req.params.id)
-        ]);
+        await Product.findByIdAndDelete(req.params.id);
         res.json({ msg: 'Producto eliminado' });
         //req.log.info('Elimino el producto con el id: ' + req.params.id);
 

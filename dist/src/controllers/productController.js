@@ -106,7 +106,7 @@ const productPut = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
 exports.productPut = productPut;
 const productDelete = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const product = yield product_1.default.findById(req.params.id, '_id category');
+        const product = yield product_1.default.findById(req.params.id, '_id category picture');
         if (!product) {
             //req.log.warn(`El producto con el id ${req.params.id} no existe en la BD`);
             return res.status(404).json({ msg: 'No existe el producto con el id: ' + req.params.id });
@@ -122,11 +122,9 @@ const productDelete = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                     break;
                 }
             }
+            category.save();
         }
-        yield Promise.all([
-            category === null || category === void 0 ? void 0 : category.save(),
-            product_1.default.findByIdAndDelete(req.params.id)
-        ]);
+        yield product_1.default.findByIdAndDelete(req.params.id);
         res.json({ msg: 'Producto eliminado' });
         //req.log.info('Elimino el producto con el id: ' + req.params.id);
     }

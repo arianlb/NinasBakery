@@ -41,8 +41,9 @@ class Server {
         this.app.use((0, express_fileupload_1.default)({
             useTempFiles: true,
             tempFileDir: '/tmp/',
-            limits: { fileSize: 25 * 1024 * 1024 },
-            abortOnLimit: true
+            limits: { fileSize: 1 * 1024 * 1024 },
+            abortOnLimit: true,
+            debug: true
         }));
         /*this.app.use(pino({
             transport: {
