@@ -42,8 +42,7 @@ class Server {
             useTempFiles: true,
             tempFileDir: '/tmp/',
             limits: { fileSize: 1 * 1024 * 1024 },
-            abortOnLimit: true,
-            debug: true
+            abortOnLimit: true
         }));
         /*this.app.use(pino({
             transport: {

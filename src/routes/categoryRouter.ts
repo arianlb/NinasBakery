@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { check } from 'express-validator';
 
-import { categoriesGet, categoryDelete, categoryGet, categoryNamesGet, categoryPost, categoryPut, updatePicture } from "../controllers/categoryController";
+import { categoriesGet, categoryDelete, categoryGet, categoryGetNames, categoryPost, categoryPut, updatePicture } from "../controllers/categoryController";
 import { validate } from "../middlewares/validateFields";
 import { categoryExistsById } from "../helpers/dbValidators";
 import { validateUpload } from "../middlewares/validateFile";
@@ -10,7 +10,7 @@ const router = Router();
 
 router.get('/', categoriesGet);
 
-router.get('/names', categoryNamesGet);
+router.get('/names', categoryGetNames);
 
 router.get('/:id', [
     check('id', 'No es un Id valido').isMongoId(),

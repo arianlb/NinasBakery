@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updatePicture = exports.categoryDelete = exports.categoryPut = exports.categoryPost = exports.categoryNamesGet = exports.categoriesGet = exports.categoryGet = void 0;
+exports.updatePicture = exports.categoryDelete = exports.categoryPut = exports.categoryPost = exports.categoryGetNames = exports.categoriesGet = exports.categoryGet = void 0;
 const category_1 = __importDefault(require("../models/category"));
 const product_1 = __importDefault(require("../models/product"));
 const uploadPicture_1 = require("../helpers/uploadPicture");
@@ -44,7 +44,7 @@ const categoriesGet = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.categoriesGet = categoriesGet;
-const categoryNamesGet = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const categoryGetNames = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const categories = yield category_1.default.find({}, '_id name');
         res.json(categories);
@@ -55,7 +55,7 @@ const categoryNamesGet = (req, res) => __awaiter(void 0, void 0, void 0, functio
         //req.log.error(error.messge);
     }
 });
-exports.categoryNamesGet = categoryNamesGet;
+exports.categoryGetNames = categoryGetNames;
 const categoryPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const category = new category_1.default({ name: req.body.name });

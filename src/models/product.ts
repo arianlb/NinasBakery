@@ -5,7 +5,7 @@ interface IProduct {
     description: string;
     category: string;
     price: number;
-    offer: boolean;
+    inStock: boolean;
     picture: string;
 }
 
@@ -14,7 +14,7 @@ const productSchema = new Schema<IProduct>({
     description: { type: String },
     category: { type: String, required: true },
     price: { type: Number, default: 0 },
-    offer: { type: Boolean, default: false },
+    inStock: { type: Boolean, default: false },
     picture: { type: String }
 });
 

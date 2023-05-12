@@ -131,7 +131,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Tartaleta\",\r\n    \"description\": \"Es un dulce que tiene guayaba\",\r\n    \"price\": 22.50,\r\n    \"offer\": true\r\n}",
+							"raw": "{\r\n    \"name\": \"Tartaleta\",\r\n    \"description\": \"Es un dulce que tiene guayaba\",\r\n    \"price\": 22.50,\r\n    \"inStock\": true\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

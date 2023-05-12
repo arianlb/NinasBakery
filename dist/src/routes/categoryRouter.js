@@ -8,7 +8,7 @@ const dbValidators_1 = require("../helpers/dbValidators");
 const validateFile_1 = require("../middlewares/validateFile");
 const router = (0, express_1.Router)();
 router.get('/', categoryController_1.categoriesGet);
-router.get('/names', categoryController_1.categoryNamesGet);
+router.get('/names', categoryController_1.categoryGetNames);
 router.get('/:id', [
     (0, express_validator_1.check)('id', 'No es un Id valido').isMongoId(),
     validateFields_1.validate

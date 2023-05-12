@@ -33,7 +33,7 @@ export const categoriesGet = async (req: Request, res: Response) => {
     }
 }
 
-export const categoryNamesGet = async (req: Request, res: Response) => {
+export const categoryGetNames = async (req: Request, res: Response) => {
     try {
         const categories = await Category.find({}, '_id name');
         res.json(categories);

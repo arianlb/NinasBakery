@@ -6,7 +6,7 @@ const productSchema = new mongoose_1.Schema({
     description: { type: String },
     category: { type: String, required: true },
     price: { type: Number, default: 0 },
-    offer: { type: Boolean, default: false },
+    inStock: { type: Boolean, default: false },
     picture: { type: String }
 });
 /*productSchema.methods.toJSON = function () {

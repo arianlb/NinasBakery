@@ -78,8 +78,8 @@ const productPost = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             //req.log.warn(`La categoria con el id ${req.params.id} no existe en la BD`);
             return res.status(404).json({ msg: 'No existe la categoria con el id: ' + req.params.id });
         }
-        const { name, description, price, offer } = req.body;
-        const product = new product_1.default({ name, description, price, offer, category: category.name });
+        const { name, description, price, inStock } = req.body;
+        const product = new product_1.default({ name, description, price, inStock, category: category.name });
         category.products.push(product._id);
         yield Promise.all([product.save(), category.save()]);
         res.json(product);
@@ -93,7 +93,7 @@ const productPost = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 exports.productPost = productPost;
 const productPut = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const _a = req.body, { _id, picture } = _a, rest = __rest(_a, ["_id", "picture"]);
+        const _a = req.body, { _id, picture, category } = _a, rest = __rest(_a, ["_id", "picture", "category"]);
         const product = yield product_1.default.findByIdAndUpdate(req.params.id, rest, { new: true });
         res.json(product);
         //req.log.info('Actualizo el producto con el id: ' + req.params.id);
@@ -114,16 +114,7 @@ const productDelete = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         if (product.picture && product.picture.length > 1) {
             (0, uploadPicture_1.deleteFile)(product.picture);
         }
-        const category = yield category_1.default.findOne({ name: product.category });
-        if (category) {
-            for (let i = 0; i < category.products.length; i++) {
-                if (category.products[i].equals(product._id)) {
-                    category.products.splice(i, 1);
-                    break;
-                }
-            }
-            category.save();
-        }
+        yield deleteProductFromCategory(product.category, product._id);
         yield product_1.default.findByIdAndDelete(req.params.id);
         res.json({ msg: 'Producto eliminado' });
         //req.log.info('Elimino el producto con el id: ' + req.params.id);
@@ -155,4 +146,16 @@ const updatePicture = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.updatePicture = updatePicture;
+const deleteProductFromCategory = (categoryName, productId) => __awaiter(void 0, void 0, void 0, function* () {
+    const category = yield category_1.default.findOne({ name: categoryName });
+    if (category) {
+        for (let i = 0; i < category.products.length; i++) {
+            if (category.products[i].equals(productId)) {
+                category.products.splice(i, 1);
+                break;
+            }
+        }
+        category.save();
+    }
+});
 //# sourceMappingURL=productController.js.map
