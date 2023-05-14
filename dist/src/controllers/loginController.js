@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.login = void 0;
+exports.loading = exports.login = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const user_1 = __importDefault(require("../models/user"));
 const generateJWT_1 = require("../helpers/generateJWT");
@@ -39,4 +39,21 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.login = login;
+const loading = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const msg = yield loginController();
+    res.json({ msg });
+});
+exports.loading = loading;
+const loginController = () => __awaiter(void 0, void 0, void 0, function* () {
+    return new Promise((resolve, reject) => {
+        try {
+            setTimeout(() => {
+                resolve('ok');
+            }, 7000);
+        }
+        catch (error) {
+            reject('error');
+        }
+    });
+});
 //# sourceMappingURL=loginController.js.map

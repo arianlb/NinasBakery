@@ -10,5 +10,6 @@ router.post('/', [
     (0, express_validator_1.check)('password', 'El password es obligatorio').notEmpty(),
     validateFields_1.validate
 ], loginController_1.login);
+router.get('/', loginController_1.loading);
 exports.default = router;
 //# sourceMappingURL=loginRouter.js.map

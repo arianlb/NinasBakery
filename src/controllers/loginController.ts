@@ -28,3 +28,20 @@ export const login = async (req: Request, res: Response) => {
         //req.log.error(error.messge);
     }
 }
+
+export const loading = async (req: Request, res: Response) => { 
+    const msg = await loginController();
+    res.json({msg});
+}
+
+const loginController = async () => {
+    return new Promise((resolve, reject) => { 
+        try {
+            setTimeout(() => { 
+                resolve('ok');
+            }, 7000);
+        } catch (error) {
+            reject('error');
+        }
+    });
+}
