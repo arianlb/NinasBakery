@@ -15,7 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const express_fileupload_1 = __importDefault(require("express-fileupload"));
-//import pino from 'pino-http';
+const express_mongo_sanitize_1 = __importDefault(require("express-mongo-sanitize"));
+const body_parser_1 = __importDefault(require("body-parser"));
+const helmet_1 = __importDefault(require("helmet"));
 const connection_1 = __importDefault(require("../database/connection"));
 const categoryRouter_1 = __importDefault(require("../routes/categoryRouter"));
 const productRouter_1 = __importDefault(require("../routes/productRouter"));
@@ -28,6 +30,7 @@ class Server {
         this.connectDB();
         this.middlewares();
         this.routes();
+        this.errorHandler();
     }
     connectDB() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -35,6 +38,10 @@ class Server {
         });
     }
     middlewares() {
+        this.app.use(body_parser_1.default.urlencoded({ extended: true }));
+        this.app.use(body_parser_1.default.json());
+        this.app.use((0, express_mongo_sanitize_1.default)());
+        this.app.use((0, helmet_1.default)());
         this.app.use((0, cors_1.default)());
         this.app.use(express_1.default.json());
         this.app.use(express_1.default.static('public'));
@@ -44,21 +51,18 @@ class Server {
             limits: { fileSize: 1 * 1024 * 1024 },
             abortOnLimit: true
         }));
-        /*this.app.use(pino({
-            transport: {
-                target: 'pino-pretty',
-                options: {
-                    translateTime: "SYS:standard",
-                    ignore: "req.id,req.query,req.params,req.headers,req.remoteAddress,req.remotePort,res,err"
-                }
-            }
-        }));*/
     }
     routes() {
         this.app.use('/api/categories', categoryRouter_1.default);
         this.app.use('/api/products', productRouter_1.default);
         this.app.use('/api/users', userRouter_1.default);
         this.app.use('/api/login', loginRouter_1.default);
+    }
+    errorHandler() {
+        this.app.use((err, req, res, next) => {
+            res.status(500).json({ msg: err.message });
+            console.error('Error en: ' + req.originalUrl + ' - ' + req.method + '\n' + err.message);
+        });
     }
     listen() {
         this.app.listen(this.port, () => {

@@ -16,29 +16,27 @@ exports.loading = exports.login = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const user_1 = __importDefault(require("../models/user"));
 const generateJWT_1 = require("../helpers/generateJWT");
-const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { username, password } = req.body;
+        const username = req.body.username.toString();
+        const password = req.body.password.toString();
         const user = yield user_1.default.findOne({ username });
         if (!user) {
-            //req.log.warn(`El usuario ${username} no existe en la BD`);
-            return res.status(404).json({ msg: 'Username incorrecto' });
+            return res.status(404).json({ msg: 'Username o Password incorrecto' });
         }
         const validPassword = bcryptjs_1.default.compareSync(password, user.password);
         if (!validPassword) {
-            //req.log.warn('La contraseña es incorrecta');
-            return res.status(400).json({ msg: 'Password incorrecto' });
+            return res.status(404).json({ msg: 'Username o Password incorrecto' });
         }
         const token = yield (0, generateJWT_1.jwt)(user._id.toString(), user.role, user.username);
         res.json(token);
-        //req.log.info('Inicio sesion el usuario: ' + user.username);
     }
     catch (error) {
-        res.status(500).json({ msg: error.message });
-        //req.log.error(error.messge);
+        next(error);
     }
 });
 exports.login = login;
+//Funcion de prueba experimental
 const loading = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const msg = yield loginController();
     res.json({ msg });

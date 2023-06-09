@@ -8,7 +8,6 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const validateToken = (req, res, next) => {
     const token = req.header('Authorization');
     if (!token) {
-        //req.log.warn('No hay token en la peticion');
         return res.status(401).json({
             msg: 'No hay token en la petición'
         });
@@ -22,7 +21,6 @@ const validateToken = (req, res, next) => {
     }
     catch (error) {
         res.status(401).json({ msg: 'Token no válido' });
-        //req.log.warn('Token no valido');
     }
 };
 exports.validateToken = validateToken;

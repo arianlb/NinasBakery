@@ -26,71 +26,60 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userDelete = exports.userPut = exports.userPost = exports.userGet = exports.usersGet = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const user_1 = __importDefault(require("../models/user"));
-const usersGet = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const usersGet = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const users = yield user_1.default.find();
         res.json(users);
-        //req.log.info('Obtuvo todos los usuarios')
     }
     catch (error) {
-        res.status(500).json({ msg: error.message });
-        //req.log.error(error.messge);
+        next(error);
     }
 });
 exports.usersGet = usersGet;
-const userGet = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const userGet = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const user = yield user_1.default.findById(req.params.id);
         if (!user) {
-            //req.log.warn(`El usuario con el id ${req.params.id} no existe en la BD`);
             return res.status(404).json({ msg: 'No existe el usuario con el id: ' + req.params.id });
         }
         res.json(user);
-        //req.log.info('Obtuvo el usuario con el id: ' + req.params.id);
     }
     catch (error) {
-        res.status(500).json({ msg: error.message });
-        //req.log.error(error.messge);
+        next(error);
     }
 });
 exports.userGet = userGet;
-const userPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const userPost = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { username, password, role } = req.body;
         const encryptedPassword = bcryptjs_1.default.hashSync(password, bcryptjs_1.default.genSaltSync());
         const user = new user_1.default({ username, password: encryptedPassword, role });
         yield user.save();
         res.json(user);
-        //req.log.info('Creo el usuario: ' + user.username);
     }
     catch (error) {
-        res.status(500).json({ msg: error.message });
-        //req.log.error(error.messge);
+        next(error);
     }
 });
 exports.userPost = userPost;
-const userPut = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const userPut = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const _a = req.body, { _id, password } = _a, rest = __rest(_a, ["_id", "password"]);
         const user = yield user_1.default.findByIdAndUpdate(req.params.id, rest, { new: true });
         res.json(user);
-        //req.log.info('Actualizo el usuario con el id: ' + req.params.id);
     }
     catch (error) {
-        res.status(500).json({ msg: error.message });
-        //req.log.error(error.messge);
+        next(error);
     }
 });
 exports.userPut = userPut;
-const userDelete = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const userDelete = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield user_1.default.findByIdAndDelete(req.params.id);
         res.json({ msg: 'Usuario eliminado' });
-        //req.log.info('Elimino el usuario con el id: ' + req.params.id);
     }
     catch (error) {
-        res.status(500).json({ msg: error.message });
-        //req.log.error(error.messge);
+        next(error);
     }
 });
 exports.userDelete = userDelete;
