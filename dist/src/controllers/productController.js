@@ -27,6 +27,7 @@ exports.updatePicture = exports.productDelete = exports.productPut = exports.pro
 const category_1 = __importDefault(require("../models/category"));
 const product_1 = __importDefault(require("../models/product"));
 const uploadPicture_1 = require("../helpers/uploadPicture");
+const deleteProductFromCategory_1 = require("../helpers/deleteProductFromCategory");
 const productGet = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const product = yield product_1.default.findById(req.params.id);
@@ -100,7 +101,7 @@ const productDelete = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         if (product.picture && product.picture.length > 1) {
             (0, uploadPicture_1.deleteFile)(product.picture);
         }
-        yield deleteProductFromCategory(product.category, product._id);
+        yield (0, deleteProductFromCategory_1.deleteProductFromCategory)(product.category, product._id);
         yield product_1.default.findByIdAndDelete(req.params.id);
         res.json({ msg: 'Producto eliminado' });
     }
@@ -127,16 +128,4 @@ const updatePicture = (req, res, next) => __awaiter(void 0, void 0, void 0, func
     }
 });
 exports.updatePicture = updatePicture;
-const deleteProductFromCategory = (categoryName, productId) => __awaiter(void 0, void 0, void 0, function* () {
-    const category = yield category_1.default.findOne({ name: categoryName });
-    if (category) {
-        for (let i = 0; i < category.products.length; i++) {
-            if (category.products[i].equals(productId)) {
-                category.products.splice(i, 1);
-                break;
-            }
-        }
-        category.save();
-    }
-});
 //# sourceMappingURL=productController.js.map

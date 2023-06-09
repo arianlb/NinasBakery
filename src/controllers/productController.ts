@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import Category from '../models/category';
 import Product from '../models/product';
 import { deleteFile, upload } from "../helpers/uploadPicture";
+import { deleteProductFromCategory } from '../helpers/deleteProductFromCategory';
 
 export const productGet = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -108,18 +109,5 @@ export const updatePicture = async (req: Request, res: Response, next: NextFunct
 
     } catch (error: any) {
         next(error);
-    }
-}
-
-const deleteProductFromCategory = async (categoryName: string, productId: any) => { 
-    const category = await Category.findOne({ name: categoryName });
-    if (category) {
-        for (let i = 0; i < category.products.length!; i++) {
-            if (category.products[i].equals(productId)) {
-                category.products.splice(i, 1);
-                break;
-            }
-        }
-        category.save();
     }
 }
