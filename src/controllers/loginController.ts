@@ -1,34 +1,32 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import bcryptjs from "bcryptjs";
 
 import User from '../models/user';
 import { jwt } from "../helpers/generateJWT";
 
-export const login = async (req: Request, res: Response) => { 
+export const login = async (req: Request, res: Response, next: NextFunction) => { 
     try {
-        const { username, password } = req.body;
+        const username = req.body.username.toString();
+        const password = req.body.password.toString();
         const user = await User.findOne({ username });
         if (!user) {
-            //req.log.warn(`El usuario ${username} no existe en la BD`);
-            return res.status(404).json({ msg: 'Username incorrecto' });
+            return res.status(404).json({ msg: 'Username o Password incorrecto' });
         }
 
         const validPassword = bcryptjs.compareSync(password, user.password);
         if(!validPassword) {
-            //req.log.warn('La contraseña es incorrecta');
-            return res.status(400).json({ msg: 'Password incorrecto' });
+            return res.status(404).json({ msg: 'Username o Password incorrecto' });
         }
 
         const token = await jwt(user._id.toString(), user.role, user.username);
         res.json(token);
-        //req.log.info('Inicio sesion el usuario: ' + user.username);
         
     } catch (error: any) {
-        res.status(500).json({ msg: error.message });
-        //req.log.error(error.messge);
+        next(error);
     }
 }
 
+//Funcion de prueba experimental
 export const loading = async (req: Request, res: Response) => { 
     const msg = await loginController();
     res.json({msg});

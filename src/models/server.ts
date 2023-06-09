@@ -1,7 +1,9 @@
-import express, { Application } from 'express';
+import express, { Application, NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import fileUpload from 'express-fileupload';
-//import pino from 'pino-http';
+import mongoSanitize from 'express-mongo-sanitize';
+import bodyParser from 'body-parser';
+import helmet from 'helmet';
 
 import dbConnection from '../database/connection';
 import categoryRoutes from '../routes/categoryRouter';
@@ -20,6 +22,7 @@ class Server {
         this.connectDB();
         this.middlewares();
         this.routes();
+        this.errorHandler();
     }
 
     async connectDB() {
@@ -27,6 +30,10 @@ class Server {
     }
 
     middlewares() {
+        this.app.use(bodyParser.urlencoded({ extended: true }));
+        this.app.use(bodyParser.json());
+        this.app.use(mongoSanitize());
+        this.app.use(helmet());
         this.app.use(cors());
         this.app.use(express.json());
         this.app.use(express.static('public'));
@@ -36,15 +43,6 @@ class Server {
             limits: { fileSize: 1 * 1024 * 1024 },
             abortOnLimit: true
         }));
-        /*this.app.use(pino({
-            transport: {
-                target: 'pino-pretty',
-                options: {
-                    translateTime: "SYS:standard",
-                    ignore: "req.id,req.query,req.params,req.headers,req.remoteAddress,req.remotePort,res,err"
-                }
-            }
-        }));*/
     }
 
     routes() {
@@ -52,6 +50,13 @@ class Server {
         this.app.use('/api/products', productRoutes);
         this.app.use('/api/users', userRoutes);
         this.app.use('/api/login', loginRoutes);
+    }
+
+    errorHandler() {
+        this.app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+            res.status(500).json({ msg: err.message });
+            console.error('Error en: ' + req.originalUrl + ' - ' + req.method + '\n' + err.message);
+        });
     }
 
     listen() {

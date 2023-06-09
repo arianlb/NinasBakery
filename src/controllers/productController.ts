@@ -1,58 +1,49 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
 import Category from '../models/category';
 import Product from '../models/product';
 import { deleteFile, upload } from "../helpers/uploadPicture";
 
-export const productGet = async (req: Request, res: Response) => {
+export const productGet = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const product = await Product.findById(req.params.id);
         if (!product) { 
-            //req.log.warn(`El producto con el id ${req.params.id} no existe en la BD`);
             return res.status(404).json({ msg: 'No existe el producto con el id: ' + req.params.id });
         }
         res.json(product);
-        //req.log.info('Obtuvo el producto con el id: ' + req.params.id);
         
     } catch (error: any) {
-        res.status(500).json({ msg: error.message });
-        //req.log.error(error.messge);
+        next(error);
     }
 }
 
-export const productsGet = async (req: Request, res: Response) => {
+export const productsGet = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const products = await Product.find();
         res.json(products);
-        //req.log.info('Obtuvo todos los productos');
         
     } catch (error: any) {
-        res.status(500).json({ msg: error.message });
-        //req.log.error(error.messge);
+        next(error);
     }
 }
 
-export const productsByCategory = async (req: Request, res: Response) => {
+export const productsByCategory = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const category = await Category.findById(req.params.id).populate('products');
         if (!category) {
-            //req.log.warn(`La categoria con el id ${req.params.id} no existe en la BD`);
             return res.status(404).json({ msg: 'No existe la categoria con el id: ' + req.params.id });
         }
         res.json(category.products);
-        //req.log.info('Obtuvo los productos de la categoria con el id: ' + req.params.id);
 
     } catch (error: any) {
-        res.status(500).json({ msg: error.message });
-        //req.log.error(error.messge);
+        next(error);
     }
 }
 
-export const productPost = async (req: Request, res: Response) => {
+export const productPost = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const category = await Category.findById(req.params.id);
         if (!category) {
-            //req.log.warn(`La categoria con el id ${req.params.id} no existe en la BD`);
             return res.status(404).json({ msg: 'No existe la categoria con el id: ' + req.params.id });
         }
 
@@ -62,32 +53,27 @@ export const productPost = async (req: Request, res: Response) => {
 
         await Promise.all([product.save(), category.save()]);
         res.json(product);
-        //req.log.info('Creo el producto: ' + product._id);
 
     } catch (error: any) {
-        res.status(500).json({ msg: error.message });
-        //req.log.error(error.messge);
+        next(error);
     }
 }
 
-export const productPut = async (req: Request, res: Response) => {
+export const productPut = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { _id, picture, category, ...rest } = req.body;
         const product = await Product.findByIdAndUpdate(req.params.id, rest, { new: true });
         res.json(product);
-        //req.log.info('Actualizo el producto con el id: ' + req.params.id);
 
     } catch (error: any) {
-        res.status(500).json({ msg: error.message });
-        //req.log.error(error.messge);
+        next(error);
     }
 }
 
-export const productDelete = async (req: Request, res: Response) => {
+export const productDelete = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const product = await Product.findById(req.params.id, '_id category picture');
         if (!product) {
-            //req.log.warn(`El producto con el id ${req.params.id} no existe en la BD`);
             return res.status(404).json({ msg: 'No existe el producto con el id: ' + req.params.id });
         }
 
@@ -99,19 +85,16 @@ export const productDelete = async (req: Request, res: Response) => {
         
         await Product.findByIdAndDelete(req.params.id);
         res.json({ msg: 'Producto eliminado' });
-        //req.log.info('Elimino el producto con el id: ' + req.params.id);
 
     } catch (error: any) {
-        res.status(500).json({ msg: error.message });
-        //req.log.error(error.messge);
+        next(error);
     }
 }
 
-export const updatePicture = async (req: Request, res: Response) => {
+export const updatePicture = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const product = await Product.findById(req.params.id);
         if (!product) {
-            //req.log.warn(`El producto con el id ${req.params.id} no existe en la BD`);
             return res.status(404).json({ msg: 'No existe el producto con el id: ' + req.params.id });
         }
 
@@ -122,11 +105,9 @@ export const updatePicture = async (req: Request, res: Response) => {
         product.picture = await upload(req.files!.file) || '';
         await product.save();
         res.json(product);
-        //req.log.info('Actualizo la imagen del producto: ' + product._id);
 
     } catch (error: any) {
-        res.status(500).json({ msg: error.message });
-        //req.log.error(error.messge);
+        next(error);
     }
 }
 
