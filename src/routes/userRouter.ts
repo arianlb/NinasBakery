@@ -1,20 +1,30 @@
 import { Router } from "express";
 import { check } from 'express-validator';
 
-import { userDelete, userGet, userPost, userPut, usersGet } from "../controllers/userController";
 import { validate } from "../middlewares/validateFields";
+//import { validateToken } from "../middlewares/validateJWT";
+//import { hasAnyRole } from "../middlewares/validateRole";
 import { userExistsById, usernameExists, isRoleValid } from '../helpers/dbValidators';
+
+import { userDelete, userGet, userPost, userPut, usersGet } from "../controllers/userController";
 
 const router = Router();
 
-router.get('/', usersGet);
+router.get('/', /*[
+    validateToken,
+    hasAnyRole('ROLE_ADMIN')
+],*/ usersGet);
 
 router.get('/:id', [
+    //validateToken,
+    //hasAnyRole('ROLE_ADMIN'),
     check('id', 'No es un Id valido').isMongoId(),
     validate
 ], userGet);
 
 router.post('/', [
+    //validateToken,
+    //hasAnyRole('ROLE_ADMIN'),
     check('username', 'El username es obligatorio').notEmpty(),
     check('username').custom(usernameExists),
     check('password', 'El password es obligatorio').notEmpty(),
@@ -24,6 +34,8 @@ router.post('/', [
 ], userPost);
 
 router.put('/:id', [
+    //validateToken,
+    //hasAnyRole('ROLE_ADMIN'),
     check('id', 'No es un Id valido').isMongoId(),
     check('id').custom(userExistsById),
     check('role').custom(isRoleValid),
@@ -31,6 +43,8 @@ router.put('/:id', [
 ], userPut);
 
 router.delete('/:id', [
+    //validateToken,
+    //hasAnyRole('ROLE_ADMIN'),
     check('id', 'No es un Id valido').isMongoId(),
     check('id').custom(userExistsById),
     validate

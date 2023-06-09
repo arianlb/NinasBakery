@@ -5,10 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.jwt = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const jwt = (uid, role, username) => {
+const jwt = (uid) => {
     return new Promise((resolve, reject) => {
-        const payload = { uid, role, username };
-        jsonwebtoken_1.default.sign(payload, process.env.JWT_SECRET || 'CualquierMierdadSecreta7', (err, token) => {
+        const payload = { uid };
+        jsonwebtoken_1.default.sign(payload, process.env.JWT_SECRET || 'aiDASDf498yrbfa6sffTSaos8yr821rfv', (err, token) => {
             if (err) {
                 reject("No se pudo generar el token");
             }

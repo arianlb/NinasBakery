@@ -18,7 +18,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
             return res.status(404).json({ msg: 'Username o Password incorrecto' });
         }
 
-        const token = await jwt(user._id.toString(), user.role, user.username);
+        const token = await jwt(user._id.toString());
         res.json(token);
         
     } catch (error: any) {
