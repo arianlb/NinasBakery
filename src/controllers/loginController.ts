@@ -19,7 +19,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
         }
 
         const token = await jwt(user._id.toString());
-        res.json(token);
+        res.json({ user, token });
         
     } catch (error: any) {
         next(error);
