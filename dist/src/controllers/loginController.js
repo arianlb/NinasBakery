@@ -29,7 +29,7 @@ const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* ()
             return res.status(404).json({ msg: 'Username o Password incorrecto' });
         }
         const token = yield (0, generateJWT_1.jwt)(user._id.toString());
-        res.json(token);
+        res.json({ user, token });
     }
     catch (error) {
         next(error);

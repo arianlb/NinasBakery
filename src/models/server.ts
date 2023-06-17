@@ -64,6 +64,11 @@ class Server {
             console.log('Server running on port ' + this.port);
         });
     }
+
+    // Solo para el uso de testear la app
+    getApp() {
+        return this.app;
+    }
 }
 
 export default Server;

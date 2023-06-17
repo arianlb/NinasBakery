@@ -15,7 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const dbConnection = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield mongoose_1.default.connect(process.env.MONGODB_CNN || 'mongodb://localhost:27017/ninas');
+        const connectionString = process.env.NODE_ENV === 'test' ? process.env.MONGODB_CNN_TEST : process.env.MONGODB_CNN;
+        yield mongoose_1.default.connect(connectionString || '');
         console.log('Database online');
     }
     catch (error) {
