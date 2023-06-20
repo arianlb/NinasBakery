@@ -5,7 +5,7 @@ import { validate } from "../middlewares/validateFields";
 //import { validateToken } from "../middlewares/validateJWT";
 //import { hasAnyRole } from "../middlewares/validateRole";
 import { validateUpload } from "../middlewares/validateFile";
-import { categoryExistsById } from "../helpers/dbValidators";
+import { categoryHasNotProducts } from "../helpers/dbValidators";
 
 import { categoriesGet, categoryDelete, categoryGet, categoryGetNames, categoryPost, categoryPut, updatePicture } from "../controllers/categoryController";
 
@@ -39,7 +39,7 @@ router.delete('/:id', [
     //validateToken,
     //hasAnyRole('ROLE_ADIMN'),
     check('id', 'No es un Id valido').isMongoId(),
-    check('id').custom(categoryExistsById),
+    check('id').custom(categoryHasNotProducts),
     validate
 ], categoryDelete);
 

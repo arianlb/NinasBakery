@@ -32,7 +32,7 @@ router.delete('/:id', [
     //validateToken,
     //hasAnyRole('ROLE_ADIMN'),
     (0, express_validator_1.check)('id', 'No es un Id valido').isMongoId(),
-    (0, express_validator_1.check)('id').custom(dbValidators_1.categoryExistsById),
+    (0, express_validator_1.check)('id').custom(dbValidators_1.categoryHasNotProducts),
     validateFields_1.validate
 ], categoryController_1.categoryDelete);
 router.put('/:id/picture', [
