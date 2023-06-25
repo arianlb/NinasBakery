@@ -18,6 +18,9 @@ export const upload = async (file: any) => {
 export const deleteFile = (address: string) => {
     const addressArray = address.split('/');
     const name = addressArray[addressArray.length - 1];
+    if (name === 'no-image_nnyrxi.jpg') {
+        return;
+    }
     const [public_id] = name.split('.');
     cloudinary.uploader.destroy(public_id);
 }

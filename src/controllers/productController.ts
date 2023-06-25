@@ -49,7 +49,8 @@ export const productPost = async (req: Request, res: Response, next: NextFunctio
         }
 
         const { name, description, price, inStock } = req.body;
-        const product = new Product({ name, description, price, inStock, category: category.name });
+        const picture = 'https://res.cloudinary.com/dqjs90sqs/image/upload/v1687710346/no-image_nnyrxi.jpg';
+        const product = new Product({ name, description, price, inStock, category: category.name, picture });
         category.products.push(product._id);
 
         await Promise.all([product.save(), category.save()]);
