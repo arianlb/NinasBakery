@@ -41,6 +41,7 @@ export const categoryGetNames = async (req: Request, res: Response, next: NextFu
 export const categoryPost = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const category = new Category({ name: req.body.name });
+        category.picture = 'https://res.cloudinary.com/dqjs90sqs/image/upload/v1687710346/no-image_nnyrxi.jpg';
         await category.save();
         res.json(category);
         
