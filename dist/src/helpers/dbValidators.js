@@ -12,10 +12,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.isRoleValid = exports.userExistsById = exports.usernameExists = exports.productExistsById = exports.categoryHasNotProducts = void 0;
+exports.isRoleValid = exports.userExistsById = exports.usernameExists = exports.productExistsById = exports.categoryHasNotProducts = exports.categoryExistsByName = void 0;
 const category_1 = __importDefault(require("../models/category"));
 const product_1 = __importDefault(require("../models/product"));
 const user_1 = __importDefault(require("../models/user"));
+const categoryExistsByName = (name) => __awaiter(void 0, void 0, void 0, function* () {
+    if (name) {
+        const category = yield category_1.default.findOne({ name });
+        if (!category) {
+            throw new Error(`La categoria con el nombre ${name} no existe en la BD`);
+        }
+    }
+});
+exports.categoryExistsByName = categoryExistsByName;
 const categoryHasNotProducts = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const category = yield category_1.default.findById(id).populate('products');
     if (!category) {

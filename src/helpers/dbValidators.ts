@@ -2,6 +2,15 @@ import Category from '../models/category';
 import Product from '../models/product';
 import User from '../models/user';
 
+export const categoryExistsByName = async (name: string) => {
+    if (name) {
+        const category = await Category.findOne({ name });
+        if (!category) {
+            throw new Error(`La categoria con el nombre ${name} no existe en la BD`);
+        }
+    }
+}
+
 export const categoryHasNotProducts = async (id: string) => { 
     const category = await Category.findById(id).populate('products');
     if (!category) {

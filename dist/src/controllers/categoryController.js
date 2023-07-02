@@ -52,6 +52,7 @@ exports.categoryGetNames = categoryGetNames;
 const categoryPost = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const category = new category_1.default({ name: req.body.name });
+        category.picture = 'https://res.cloudinary.com/dqjs90sqs/image/upload/v1687710346/no-image_nnyrxi.jpg';
         yield category.save();
         res.json(category);
     }

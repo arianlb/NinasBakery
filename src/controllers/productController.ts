@@ -63,7 +63,24 @@ export const productPost = async (req: Request, res: Response, next: NextFunctio
 
 export const productPut = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { _id, picture, category, ...rest } = req.body;
+        const { picture, category, ...rest } = req.body;
+        
+        const productDB = await Product.findById(req.params.id, '_id category');
+        if (!productDB) {
+            return res.status(404).json({ msg: 'No existe el producto con el id: ' + req.params.id });
+        }
+
+        if (category && category !== productDB.category) {
+            const categoryDB = await Category.findOne({ name: category });
+            if (!categoryDB) {
+                return res.status(404).json({ msg: 'No existe la categoria con el nombre: ' + category });
+            }
+            deleteProductFromCategory(productDB.category, productDB._id);
+            categoryDB.products.push(productDB._id);
+            categoryDB.save();
+            rest.category = category;
+        }
+
         const product = await Product.findByIdAndUpdate(req.params.id, rest, { new: true });
         res.json(product);
 
@@ -83,7 +100,7 @@ export const productDelete = async (req: Request, res: Response, next: NextFunct
             deleteFile(product.picture);
         }
         
-        await deleteProductFromCategory(product.category, product._id);
+        deleteProductFromCategory(product.category, product._id);
         
         await Product.findByIdAndDelete(req.params.id);
         res.json({ msg: 'Producto eliminado' });

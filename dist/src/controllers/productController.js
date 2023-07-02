@@ -71,7 +71,8 @@ const productPost = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
             return res.status(404).json({ msg: 'No existe la categoria con el id: ' + req.params.id });
         }
         const { name, description, price, inStock } = req.body;
-        const product = new product_1.default({ name, description, price, inStock, category: category.name });
+        const picture = 'https://res.cloudinary.com/dqjs90sqs/image/upload/v1687710346/no-image_nnyrxi.jpg';
+        const product = new product_1.default({ name, description, price, inStock, category: category.name, picture });
         category.products.push(product._id);
         yield Promise.all([product.save(), category.save()]);
         res.json(product);
@@ -83,7 +84,21 @@ const productPost = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
 exports.productPost = productPost;
 const productPut = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const _a = req.body, { _id, picture, category } = _a, rest = __rest(_a, ["_id", "picture", "category"]);
+        const _a = req.body, { picture, category } = _a, rest = __rest(_a, ["picture", "category"]);
+        const productDB = yield product_1.default.findById(req.params.id, '_id category');
+        if (!productDB) {
+            return res.status(404).json({ msg: 'No existe el producto con el id: ' + req.params.id });
+        }
+        if (category && category !== productDB.category) {
+            const categoryDB = yield category_1.default.findOne({ name: category });
+            if (!categoryDB) {
+                return res.status(404).json({ msg: 'No existe la categoria con el nombre: ' + category });
+            }
+            (0, deleteProductFromCategory_1.deleteProductFromCategory)(productDB.category, productDB._id);
+            categoryDB.products.push(productDB._id);
+            categoryDB.save();
+            rest.category = category;
+        }
         const product = yield product_1.default.findByIdAndUpdate(req.params.id, rest, { new: true });
         res.json(product);
     }
@@ -101,7 +116,7 @@ const productDelete = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         if (product.picture && product.picture.length > 1) {
             (0, uploadPicture_1.deleteFile)(product.picture);
         }
-        yield (0, deleteProductFromCategory_1.deleteProductFromCategory)(product.category, product._id);
+        (0, deleteProductFromCategory_1.deleteProductFromCategory)(product.category, product._id);
         yield product_1.default.findByIdAndDelete(req.params.id);
         res.json({ msg: 'Producto eliminado' });
     }

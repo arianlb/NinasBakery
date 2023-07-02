@@ -28,6 +28,9 @@ exports.upload = upload;
 const deleteFile = (address) => {
     const addressArray = address.split('/');
     const name = addressArray[addressArray.length - 1];
+    if (name === 'no-image_nnyrxi.jpg') {
+        return;
+    }
     const [public_id] = name.split('.');
     cloudinary_1.v2.uploader.destroy(public_id);
 };
